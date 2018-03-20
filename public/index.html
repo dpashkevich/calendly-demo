@@ -6,17 +6,21 @@
     <title>
         Calendly Demo App
     </title>
-
+    <script src="/socket.io/socket.io.js"></script>
 </head>
 
 <body>
-    Hello <span id="placeholder">...</span>
+    Hello World!
+    <div id="msgContainer"></div>
     <script>
         (async () => {
-            const placeHolderEl = document.getElementById('placeholder');
-            const response = await fetch('/placeholder');
-            const name = await response.text();
-            placeHolderEl.innerHTML = name;
+            const socket = io();
+            const msgContainer = document.getElementById('msgContainer');
+            socket.on('new event', (msg) => {
+                const p = document.createElement('p');
+                p.innerText = msg;
+                msgContainer.appendChild(p);
+            })
         })();
     </script>
 </body>
