@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>
+        Calendly Demo App
+    </title>
+
+</head>
+
+<body>
+    Hello <span id="placeholder">...</span>
+    <script>
+        (async () => {
+            const placeHolderEl = document.getElementById('placeholder');
+            const response = await fetch('/placeholder');
+            const name = await response.text();
+            placeHolderEl.innerHTML = name;
+        })();
+    </script>
+</body>
+
+</html>
