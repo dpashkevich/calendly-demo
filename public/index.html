@@ -6,20 +6,76 @@
     <title>
         Calendly Demo App
     </title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/handlebars-v4.0.11.js"></script>
+    <script src="/jquery-3.3.1.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
 </head>
 
 <body>
-    Hello World!
-    <div id="msgContainer"></div>
+    <header>Event Stream</header>
+    <ul id="eventContainer" class="event-container"></ul>
+
+    <script id="eventTemplate" type="text/x-handlebars-template">
+      <li class="event">
+        <p class="event-payload">
+            <a class="event-invitee" href="mailto:{{inviteeEmail}}">{{inviteeName}}</a>
+            <span class="event-type event-type-{{eventTypeClass}}">{{eventTypeVerb}}</span>
+            a
+            <span class="event-name">{{eventName}}</span>
+            at
+            <time class="event-start-time" datetime="{{startTimestamp}}">
+                {{startTimePretty}}
+            </time>
+        </p>
+        <p class="event-meta">
+           <time class="event-time" datetime="{{eventTimestamp}}" title="{{eventTimeLong}}">
+                {{eventTimeRelative}}
+            </time>
+        </p>
+      </li>
+    </script>
+
     <script>
-        (async () => {
+        (() => {
             const socket = io();
-            const msgContainer = document.getElementById('msgContainer');
+            const eventContainer = $('#eventContainer');
+            const templateSource = $('#eventTemplate').html();
+            const eventTemplate = Handlebars.compile(templateSource);
+            const eventTypePhrases = {
+                'invitee.created': {
+                    typeClass: 'create',
+                    typeVerb: 'booked'
+                },
+                'invitee.canceled': {
+                    typeClass: 'cancel',
+                    typeVerb: 'canceled'
+                }
+            }
+
             socket.on('new event', (msg) => {
-                const p = document.createElement('p');
-                p.innerText = msg;
-                msgContainer.appendChild(p);
+                msg = JSON.parse(msg);
+
+                // super minimal event validation
+                if (!msg.event || !msg.time || !msg.payload) {
+                    throw new Error('Invalid event data', msg);
+                }
+
+                const payload = msg.payload;
+                const templateData = {
+                    inviteeName: payload.invitee.name,
+                    inviteeEmail: payload.invitee.email,
+                    eventTypeVerb: eventTypePhrases[msg.event].typeVerb,
+                    eventTypeClass: eventTypePhrases[msg.event].typeClass,
+                    eventName: payload.event_type.name.toLowerCase(),
+                    startTimestamp: payload.event.start_time,
+                    startTimePretty: payload.event.start_time_pretty,
+                    eventTimestamp: msg.time,
+                    eventTimeLong: msg.time,
+                    eventTimeRelative: msg.time
+                };
+                const eventEl = $(eventTemplate(templateData));
+                eventEl.appendTo(eventContainer);
             })
         })();
     </script>
