@@ -9,7 +9,7 @@ import * as io from 'socket.io';
  */
 export class CalendlyServerApp {
   private recentEvents: object[] = [];
-  private MAX_RECENT_EVENTS = 10;
+  private MAX_RECENT_EVENTS: number = 10;
 
   constructor(private port: number) {}
 
@@ -34,7 +34,7 @@ export class CalendlyServerApp {
     });
 
     app.post('/webhook', (req, res) => {
-      this.recentEvents.push(req.body);
+      this.recentEvents.push(req.body as object);
       if (this.recentEvents.length > this.MAX_RECENT_EVENTS) {
         this.recentEvents.shift();
       }
