@@ -2,13 +2,37 @@
 
 * {box-sizing: border-box;}
 
+body {
+    background: #eee;
+    font-family: sans-serif;
+}
+
+header {
+    text-align: center;
+    font-size: 2em;
+}
+
 .event-container {
     list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 700px;
+
 }
     .event {
         display: block;
+        background: #fff;
+        padding: 2em;
+        padding-bottom: 1em;
+        margin-top: 1em;
+        border-radius: 10px;
     }
-        .event-payload {}
+    .event:hover {
+        background: #fafafa;
+    }
+        .event-payload {
+            margin: 0;
+        }
             .event-type {
 
             }
@@ -16,5 +40,10 @@
             .event-type-cancel {}
             .event-name {}
             .event-start-time {}
-        .event-meta {}
+        .event-meta {
+            margin: 0;
+            margin-top: 0.5em;
+            font-size: 0.8em;
+            text-align: right;
+        }
             .event-time {}

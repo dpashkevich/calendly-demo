@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/style.css">
     <script src="/handlebars-v4.0.11.js"></script>
     <script src="/jquery-3.3.1.min.js"></script>
+    <script src="/moment.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
 </head>
 
@@ -23,7 +24,7 @@
             <span class="event-type event-type-{{eventTypeClass}}">{{eventTypeVerb}}</span>
             a
             <span class="event-name">{{eventName}}</span>
-            at
+            on
             <time class="event-start-time" datetime="{{startTimestamp}}">
                 {{startTimePretty}}
             </time>
@@ -69,10 +70,10 @@
                     eventTypeClass: eventTypePhrases[msg.event].typeClass,
                     eventName: payload.event_type.name.toLowerCase(),
                     startTimestamp: payload.event.start_time,
-                    startTimePretty: payload.event.start_time_pretty,
+                    startTimePretty: moment(payload.event.start_time).format('lll'),
                     eventTimestamp: msg.time,
-                    eventTimeLong: msg.time,
-                    eventTimeRelative: msg.time
+                    eventTimeLong: moment(msg.time).format('LLL'),
+                    eventTimeRelative: moment(msg.time).fromNow()
                 };
                 const eventEl = $(eventTemplate(templateData));
                 eventEl.appendTo(eventContainer);
