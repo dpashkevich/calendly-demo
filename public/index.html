@@ -54,9 +54,7 @@
                 }
             }
 
-            socket.on('new event', (msg) => {
-                msg = JSON.parse(msg);
-
+            function addEvent(msg) {
                 // super minimal event validation
                 if (!msg.event || !msg.time || !msg.payload) {
                     throw new Error('Invalid event data', msg);
@@ -76,7 +74,19 @@
                     eventTimeRelative: moment(msg.time).fromNow()
                 };
                 const eventEl = $(eventTemplate(templateData));
-                eventEl.appendTo(eventContainer);
+                eventEl.prependTo(eventContainer);
+            }
+
+            $.get('/recentEvents').then((recentEvents) => {
+                recentEvents.forEach(addEvent);
+            }).catch(() => {
+                console.error('Failed to retrieve recent events', arguments);
+            })
+
+            socket.on('new event', (msg) => {
+                msg = JSON.parse(msg);
+
+                addEvent(msg);
             })
         })();
     </script>
