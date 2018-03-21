@@ -18,6 +18,8 @@
     "prefer-type-cast": false,
     "strict-boolean-expressions": false,
     "no-console": false,
+    "no-parameter-properties": false,
+    "interface-name": false,
     "trailing-comma": [ // https://palantir.github.io/tslint/rules/trailing-comma/
       true,
       {
